@@ -10,8 +10,17 @@ import UIKit
 
 class ColorsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var colors = ["red", "orange", "yellow", "green", "blue", "purple", "brown"]
-    var uiColors = [UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.purple, UIColor.brown]
+    @IBOutlet weak var colorsTableView: UITableView!
+    
+    
+    var colors = [Color(colorName : "red", uiColor : UIColor.red),
+                  Color(colorName :"orange", uiColor :UIColor.orange),
+                  Color(colorName :"yellow", uiColor :UIColor.yellow),
+                  Color(colorName :"green", uiColor :UIColor.green),
+                  Color(colorName :"blue", uiColor :UIColor.blue),
+                  Color(colorName :"purple", uiColor :UIColor.purple),
+                  Color(colorName :"brown", uiColor :UIColor.brown)]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -33,11 +42,22 @@ class ColorsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "colorCell", for: indexPath)
-        
-        cell.textLabel?.text = colors[indexPath.row]
-        cell.backgroundColor = uiColors[indexPath.row]
+        let color = colors[indexPath.row]
+        cell.textLabel?.text = color.colorName
+        cell.backgroundColor = color.uiColor
         
         return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? ColorDetailViewController, let row = colorsTableView.indexPathForSelectedRow?.row{
+            destination.color = colors[row]
+        }
+       
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.isSelected = false
     }
     
     /*
